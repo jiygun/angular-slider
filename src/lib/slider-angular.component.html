@@ -1,0 +1,13 @@
+<div class="slide" #slide>
+    <div class="slide__list" #slideList [class]="slideListClass" (mousedown)="onMouseDown($event)">
+        <div class="slide__item" *ngFor="let slide of slideItemList">
+            <a class="slide__link">
+                <img class="slide__image" src="{{slide.imagePath}}" alt="">
+                <div *ngIf="slide.isHaveLine" class="slide__line" [class]="getLineClass(slide.lineLocation)" [class.opacity]="getOpacityClass(slide.isHaveOpacity)">
+                    <span class="line__header" [class]="getHeaderLocationClass(slide.headerLocation)">{{slide.lineHeader}}</span>
+                    <p class="line__content" [class]="getContentLocationClass(slide.contentLocation)">{{slide.lineContent}}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
