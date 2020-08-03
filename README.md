@@ -23,19 +23,22 @@ In Component
 
 ```hs
     <slider-angular [slideList]="objectList" [isSlideHorizontal]="true or false" (activeSlide)="activeSlide($event)" (clickedSlide)="clickedSlide($event)"></slider-angular>
+```
 
-    Objects
+Objects
 
-    - Your object list must be equal or higher than two.
+- Your object list must be equal or higher than two.
 
-    Only With Images
+Only With Images
 
+```hs
     objectList=[{
       imagePath:"Your image path"
     },];
+```
+With Parameters
 
-    With Parameters
-
+```hs
     objectList=[{
       imagePath:"Your image path",
       isHaveLine:true or false,
