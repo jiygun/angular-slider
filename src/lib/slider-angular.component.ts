@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { SlideModel } from './slide-model';
 import { HorizontalSlider } from './slider.horizontal';
 import { VerticalSlider } from './slider.vertical';
 
@@ -16,7 +17,7 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges {
   @Output() activeSlide:EventEmitter<number>;
   @Output() clickedSlide:EventEmitter<number>;
 
-  private _slideItemList:Array<{}>;
+  private _slideItemList:Array<SlideModel>;
   private _isSlideHorizontal:boolean;
 
   @ViewChild('slide') slideElement:ElementRef;
@@ -85,7 +86,7 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges {
   get slideListClass(){
     return this._isSlideHorizontal?"slide__list--horizontal":"slide__list--vertical";
   }
-  get slideItemList():Array<any>{ 
+  get slideItemList():Array<SlideModel>{ 
     return this._slideItemList;
   }
   checkLine(isHaveLine:boolean){

@@ -31,7 +31,14 @@ Objects
 
 Only With Images
 
+
 ```hs
+    import { SlideModel } from 'slider-angular'; 
+
+    objectList=[new SlideModel("Your image path"),];
+
+    -Or-
+
     objectList=[{
       imagePath:"Your image path"
     },];
@@ -39,6 +46,14 @@ Only With Images
 With Parameters
 
 ```hs
+    import { SlideModel } from 'slider-angular'; 
+
+    new SlideModel(imagePath,isHaveLine,lineLocation,isHaveOpacity,lineHeader,lineContent,headerLocation,contentLocation);
+
+    objectList=>Array<SlideModel>;
+
+    -Or-
+
     objectList=[{
       imagePath:"Your image path",
       isHaveLine:true or false,
