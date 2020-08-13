@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, ElementRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { SlideModel } from './slide-model';
 import { HorizontalSlider } from './slider.horizontal';
 import { VerticalSlider } from './slider.vertical';
@@ -10,9 +10,9 @@ import { VerticalSlider } from './slider.vertical';
   host:{"(window:mousemove)":"onMouseMove($event)","(window:mouseup)":"onMouseUp($event)",
   "(window:resize)":"onResize($event)"}
 })
-export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges {
+export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,DoCheck {
 
-  @Input() slideList:Array<{}>;
+  @Input() slideList:Array<any>;
   @Input() isSlideHorizontal:boolean;
   @Output() activeSlide:EventEmitter<number>;
   @Output() clickedSlide:EventEmitter<number>;
@@ -25,13 +25,28 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges {
 
   private _slider:any;
 
-  constructor() { 
+  private _slideListDiffer: IterableDiffer<Array<{}>>;
+  private _slideDirection:IterableDiffer<boolean>;
+
+  constructor(private iterableDiffers:IterableDiffers) { 
     this._slideItemList=new Array();
     this.activeSlide=new EventEmitter();
     this.clickedSlide=new EventEmitter();
     this._isSlideHorizontal=true;
   }
+  ngDoCheck(): void {
+    const slideChanges:IterableChanges<Array<{}>>=this._slideListDiffer.diff(this.slideList);
+    if(slideChanges&&this.slideList!=undefined&&this.slideList!=null&&this.slideList.length>=2){
+      this._slideItemList=this.slideList.slice(this.slideList.length-1,this.slideList.length).concat(this.slideList).concat(this.slideList.slice(0,1));
+      if(this._slider!=undefined&&this._slider!=null){
+        this._slider.slideLength=this._slideItemList.length;
+        this._slider.defaultLastSlide=this._slideItemList.length-2;
+        this._slider.copyFirstSlide=this._slideItemList.length-1;
+      }
+    }
+  }
   ngOnInit(): void {
+    this._slideListDiffer = this.iterableDiffers.find(this.slideList).create();
   }
   ngAfterViewInit(): void {
     if(this._slideItemList!=undefined&&this._slideItemList!=null&&this._slideItemList.length>=2){
@@ -45,18 +60,6 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges {
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.slideList!=undefined){
-      if(changes.slideList.previousValue!=changes.slideList.currentValue){
-        if(changes.slideList.currentValue!=null&&changes.slideList.currentValue!=undefined&&changes.slideList.currentValue.length>=2){
-          this._slideItemList=changes.slideList.currentValue.slice(changes.slideList.currentValue.length-1,changes.slideList.currentValue.length).concat(changes.slideList.currentValue).concat(changes.slideList.currentValue.slice(0,1));
-          if(this._slider!=undefined&&this._slider!=null){
-            this._slider.slideLength=this._slideItemList.length;
-            this._slider.defaultLastSlide=this._slideItemList.length-2;
-            this._slider.copyFirstSlide=this._slideItemList.length-1;
-          }
-        }
-      }
-    }
     if(changes.isSlideHorizontal!=undefined&&changes.isSlideHorizontal.currentValue!=changes.isSlideHorizontal.previousValue){
       if(changes.isSlideHorizontal.currentValue!=null&&changes.isSlideHorizontal.currentValue!=undefined&&typeof changes.isSlideHorizontal.currentValue=='boolean'){
         this._isSlideHorizontal=changes.isSlideHorizontal.currentValue;
