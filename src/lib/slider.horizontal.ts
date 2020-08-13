@@ -4,7 +4,7 @@ export class HorizontalSlider extends Slider{
 
     constructor(currentSlide:number,previousSlide:number,defaultCurrentSlide:number,defaultLastSlide:number,copyFirstSlide:number,copyLastSlide:number,slideLength:number,slideWidth:number,slideBox:HTMLElement){
         super(currentSlide,previousSlide,defaultCurrentSlide,defaultLastSlide,copyFirstSlide,copyLastSlide,slideLength,slideWidth);
-        slideBox!=null||slideBox!=undefined||typeof slideBox=="object"?slideBox.style.transform=`translate3d(${this.slideLocation}px, 0px, 0px)`:null;
+        slideBox!=null&&slideBox!=undefined&&typeof slideBox=="object"?slideBox.style.transform=`translate3d(${this.slideLocation}px, 0px, 0px)`:null;
     }
     down($event:any,slideContainer:HTMLElement,slideBox:HTMLElement){
         $event.preventDefault();
@@ -27,5 +27,10 @@ export class HorizontalSlider extends Slider{
         slideBox.style.transition="transform 0s ease 0s";
         slideBox.style.transform=`translate3d(${-parseFloat(getComputedStyle(slideContainer).width.slice(0,getComputedStyle(slideContainer).width.length-2))*this.activeSlide}px, 0px, 0px)`;
         this.slideLocation=-parseFloat(getComputedStyle(slideContainer).width.slice(0,getComputedStyle(slideContainer).width.length-2))*this.activeSlide;
+    }
+    fixSlideLocation(slideContainer:HTMLElement,slideBox:HTMLElement){
+        this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).width.slice(0,getComputedStyle(slideContainer).width.length-2));
+        slideBox.style.transitionDuration="0ms"
+        slideBox.style.transform=`translate3d(${this.slideLocation}px,0px, 0px)`;
     }
 }

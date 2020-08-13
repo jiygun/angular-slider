@@ -91,6 +91,10 @@ export class Slider{
     set slideLocation(slideLocation:number){
         this._slideLocation=slideLocation;
     }
+    set slideContainerSize(slideContainerSize:number){
+        this._slideContainerSize=slideContainerSize;
+        this._slideLocation=-(this._slideContainerSize*this._currentSlide);
+    }
     set activeSlide(location:number){
         this._currentSlide=location;
     }

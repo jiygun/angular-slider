@@ -26,24 +26,12 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
   private _slider:any;
 
   private _slideListDiffer: IterableDiffer<Array<{}>>;
-  private _slideDirection:IterableDiffer<boolean>;
 
   constructor(private iterableDiffers:IterableDiffers) { 
     this._slideItemList=new Array();
     this.activeSlide=new EventEmitter();
     this.clickedSlide=new EventEmitter();
     this._isSlideHorizontal=true;
-  }
-  ngDoCheck(): void {
-    const slideChanges:IterableChanges<Array<{}>>=this._slideListDiffer.diff(this.slideList);
-    if(slideChanges&&this.slideList!=undefined&&this.slideList!=null&&this.slideList.length>=2){
-      this._slideItemList=this.slideList.slice(this.slideList.length-1,this.slideList.length).concat(this.slideList).concat(this.slideList.slice(0,1));
-      if(this._slider!=undefined&&this._slider!=null){
-        this._slider.slideLength=this._slideItemList.length;
-        this._slider.defaultLastSlide=this._slideItemList.length-2;
-        this._slider.copyFirstSlide=this._slideItemList.length-1;
-      }
-    }
   }
   ngOnInit(): void {
     this._slideListDiffer = this.iterableDiffers.find(this.slideList).create();
@@ -57,6 +45,18 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
       this._isSlideHorizontal?
       this._slider=new HorizontalSlider(null,null,null,null,null,null,null,parseFloat(getComputedStyle(this.slideElement.nativeElement).width.slice(0,getComputedStyle(this.slideElement.nativeElement).width.length-2)),this.slideListElement.nativeElement):
       this._slider=new VerticalSlider(null,null,null,null,null,null,null,parseFloat(getComputedStyle(this.slideElement.nativeElement).height.slice(0,getComputedStyle(this.slideElement.nativeElement).height.length-2)),this.slideListElement.nativeElement);
+    }
+  }
+  ngDoCheck(): void {
+    const slideChanges:IterableChanges<Array<{}>>=this._slideListDiffer.diff(this.slideList);
+    if(slideChanges&&this.slideList!=undefined&&this.slideList!=null&&this.slideList.length>=2){
+      this._slideItemList=this.slideList.slice(this.slideList.length-1,this.slideList.length).concat(this.slideList).concat(this.slideList.slice(0,1));
+      if(this._slider!=undefined&&this._slider!=null){
+        this._slider.slideLength=this._slideItemList.length;
+        this._slider.defaultLastSlide=this._slideItemList.length-2;
+        this._slider.copyFirstSlide=this._slideItemList.length-1;
+        this._slider.fixSlideLocation(this.slideElement.nativeElement,this.slideListElement.nativeElement);
+      }
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
