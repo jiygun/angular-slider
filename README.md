@@ -67,23 +67,21 @@ Only With Images
 
 import { SlideModel,BannerModel } from 'slider-angular';
 
-  
+objectList:Array<SlideModel>;
+bannerList:Array<BannerModel>;
 
-objectList=[new SlideModel("Your image path"),];
+constructor(private changeDetector: ChangeDetectorRef){   
+ this.objectList=new Array<SlideModel>();
+ this.bannerList=new Array<BannerModel>();
+}
 
-bannerList=[new BannerModel("Your image path"),];
-
-  
-
--Or-
-
-  
-
-objectList=[{
-
-imagePath:"Your image path"
-
-},];
+ngAfterViewInit(): void {
+    //Fill your objectList
+    objectList=[new SlideModel("Your image path"),];
+    //Fill your bannerList
+    bannerList=[new BannerModel("Your image path"),];
+    this.changeDetector.detectChanges();
+}
 
 ```
 
@@ -93,21 +91,13 @@ With Parameters
 
 ```hs
 
-import { SlideModel } from 'slider-angular';
+ngAfterViewInit(): void {
+    //Fill your objectList
+    objectList=[new SlideModel(imagePath,isHaveLine,lineLocation,isHaveOpacity,lineHeader,lineContent,headerLocation,contentLocation)];
+}
 
-  
-
-new SlideModel(imagePath,isHaveLine,lineLocation,isHaveOpacity,lineHeader,lineContent,headerLocation,contentLocation);
-
-  
-
-objectList=>Array<SlideModel>;
-
-  
 
 -Or-
-
-  
 
 objectList=[{
 

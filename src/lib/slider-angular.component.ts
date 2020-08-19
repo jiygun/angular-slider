@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DoCheck, ElementRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BannerModel } from './banner-model';
 import { SlideModel } from './slide-model';
 import { HorizontalSlider } from './slider.horizontal';
@@ -133,9 +133,6 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
     return "content--"+contentLocation;
   }
   isActive(index:number){
-    return index+1==this._slider.activeSlide?"banner--active":"";
+    return this._slider!=undefined?index+1==this._slider.activeSlide?"banner--active":"":"";
   }
-  /*getBannerWidth(){
-    //return this._bannerItemList!=undefined?100/this._bannerItemList.length:null;
-  }*/
 }
