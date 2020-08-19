@@ -11,3 +11,13 @@
         </div>
     </div>
 </div>
+<div class="banner">
+    <div class="banner__list">
+        <div class="banner__item" *ngFor="let banner of bannerItemList; let i=index;" [class]="isActive(i)" (mouseenter)="bannerHover(i)">
+            <div class="banner__border">
+                <img class="banner__image" src="{{banner.imagePath}}" alt="">
+                <div class="banner__circle"></div>
+            </div>
+        </div>
+    </div>
+</div>

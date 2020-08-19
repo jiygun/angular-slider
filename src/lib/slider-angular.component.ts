@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, DoCheck, ElementRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { BannerModel } from './banner-model';
 import { SlideModel } from './slide-model';
 import { HorizontalSlider } from './slider.horizontal';
 import { VerticalSlider } from './slider.vertical';
@@ -13,11 +14,13 @@ import { VerticalSlider } from './slider.vertical';
 export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,DoCheck {
 
   @Input() slideList:Array<any>;
+  @Input() bannerList:Array<BannerModel>;
   @Input() isSlideHorizontal:boolean;
   @Output() activeSlide:EventEmitter<number>;
   @Output() clickedSlide:EventEmitter<number>;
 
   private _slideItemList:Array<SlideModel>;
+  private _bannerItemList:Array<BannerModel>;
   private _isSlideHorizontal:boolean;
 
   @ViewChild('slide') slideElement:ElementRef;
@@ -65,6 +68,11 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
         this._isSlideHorizontal=changes.isSlideHorizontal.currentValue;
       }
     }
+    if(changes.bannerList!=undefined&&changes.bannerList.previousValue!=changes.bannerList.currentValue){
+      if(changes.bannerList.currentValue!=null){
+        this._bannerItemList=changes.bannerList.currentValue;
+      }
+    }
   }
   onMouseDown($event){
     $event.preventDefault();
@@ -83,6 +91,13 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
   onResize($event){
     this._slider!=undefined&&!this.isListEmpty()?this._slider.resize(this.slideElement.nativeElement,this.slideListElement.nativeElement):null;
   }
+  bannerHover(index:number){
+    if(this._slider!=undefined){
+      this._slider.activeSlide=index+1;
+      this._slider.fixSlideLocation(this.slideElement.nativeElement,this.slideListElement.nativeElement);
+      this.activeSlide.emit(this._slider.activeSlide)
+    }
+  }
   private isListEmpty():boolean{
     return this._slideItemList!=null&&this._slideItemList!=undefined&&this._slideItemList.length>=2?false:true;
   }
@@ -91,6 +106,12 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
   }
   get slideItemList():Array<SlideModel>{ 
     return this._slideItemList;
+  }
+  get bannerItemList():Array<BannerModel>{
+    return this._bannerItemList;
+  }
+  get activeBanner():number{
+    return this._slider.activeSlide;
   }
   checkLine(isHaveLine:boolean){
     return isHaveLine;
@@ -111,4 +132,10 @@ export class SliderAngularComponent implements OnInit,AfterViewInit,OnChanges,Do
     if(contentLocation==null||contentLocation==undefined) return "content--left";
     return "content--"+contentLocation;
   }
+  isActive(index:number){
+    return index+1==this._slider.activeSlide?"banner--active":"";
+  }
+  /*getBannerWidth(){
+    //return this._bannerItemList!=undefined?100/this._bannerItemList.length:null;
+  }*/
 }
