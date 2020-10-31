@@ -30,27 +30,27 @@ export class Slider{
 
     constructor(currentSlide:number,previousSlide:number,defaultCurrentSlide:number,defaultLastSlide:number,copyFirstSlide:number,
         copyLastSlide:number,slideLength:number,slideContainerSize:number){
-        this._currentSlide=currentSlide==null||currentSlide==undefined||typeof currentSlide!='number'?this.DEFAULT_CURRENTSLIDE:currentSlide;
-        this._defaultLastSlide=defaultLastSlide==null||defaultLastSlide==undefined||typeof defaultLastSlide!='number'?this.DEFAULT_DEFAUTLASTSLIDE:defaultLastSlide;
-        this._defaultCurrentSlide=defaultCurrentSlide==null||defaultCurrentSlide==undefined||typeof defaultCurrentSlide!='number'?this.DEFAULT_DEFAULTCURRENTSLIDE:defaultCurrentSlide;
-        this._slideLength=slideLength==null||slideLength==undefined||typeof slideLength!='number'?this.DEFAULT_SLIDELENGTH:slideLength;
-        this._previousSlide=previousSlide==null||previousSlide==undefined||typeof previousSlide!='number'?this.DEFAULT_PREVIOUSSLIDE:previousSlide;
+        this._currentSlide=currentSlide?currentSlide:this.DEFAULT_CURRENTSLIDE;
+        this._defaultLastSlide=defaultLastSlide?defaultLastSlide:this.DEFAULT_DEFAUTLASTSLIDE;
+        this._defaultCurrentSlide=defaultCurrentSlide?defaultCurrentSlide:this.DEFAULT_DEFAULTCURRENTSLIDE;
+        this._slideLength=slideLength?slideLength:this.DEFAULT_SLIDELENGTH;
+        this._previousSlide=previousSlide?previousSlide:this.DEFAULT_PREVIOUSSLIDE;
         this._tempPreviousSlide=this._previousSlide;
-        this._slideContainerSize=slideContainerSize==null||slideContainerSize==undefined||typeof slideContainerSize!='number'?this.DEFAULT_SLIDECONTAINERSIZE:slideContainerSize;
+        this._slideContainerSize=slideContainerSize?slideContainerSize:this.DEFAULT_SLIDECONTAINERSIZE;
         this._slideLocation=-(this._slideContainerSize*this._currentSlide);
-        this._copyFirstSlide=copyFirstSlide==null||copyFirstSlide==undefined||typeof copyFirstSlide!='number'?this.DEFAULT_COPYFIRSTSLIDE:copyFirstSlide;
-        this._copyLastSlide=copyLastSlide==null||copyLastSlide==undefined||typeof copyLastSlide!='number'?this.DEFAULT_COPYLASTSLIDE:copyLastSlide;
+        this._copyFirstSlide=copyFirstSlide?copyFirstSlide:this.DEFAULT_COPYFIRSTSLIDE;
+        this._copyLastSlide=copyLastSlide?copyLastSlide:this.DEFAULT_COPYLASTSLIDE;
     }
     slideDown(clientAxis:number,slideContainerSize:number) {
-        this._slideContainerSize=slideContainerSize==null||slideContainerSize==undefined||typeof slideContainerSize!='number'?this._slideContainerSize:slideContainerSize;
+        this._slideContainerSize=slideContainerSize?slideContainerSize:this._slideContainerSize;
         this._currentSlide==this._copyFirstSlide?(this._currentSlide=this._defaultCurrentSlide,this._previousSlide=this._defaultLastSlide,this._slideLocation=-(this._currentSlide*this._slideContainerSize)):null;
         this._currentSlide==this._copyLastSlide?(this._currentSlide=this._defaultLastSlide,this._previousSlide=this._defaultLastSlide-1,this._slideLocation=-(this._currentSlide*this._slideContainerSize)):null;
         this._isSlideClick=true;
-        this._loc=clientAxis==null||clientAxis==undefined||typeof clientAxis!='number'?0:clientAxis;
+        this._loc=clientAxis?clientAxis:0;
     }
     slideMove(clientAxis:number) {
         this._isSlideClick?this._isSlideMove=true:null;
-        this._moveLoc=this._loc-(clientAxis==null||clientAxis==undefined||typeof clientAxis!='number'?0:clientAxis);
+        this._moveLoc=this._loc-(clientAxis?clientAxis:0);
     }
     slideUp() {
         this._isSlideClick=false;
@@ -69,24 +69,38 @@ export class Slider{
         this._previousSlide=tempCurrent==this._currentSlide?this._tempPreviousSlide:tempCurrent;
         this._tempPreviousSlide=this._previousSlide;
     }
-    clearEvents($event){
-        $event.stopPropagation();
-        $event.preventDefault();
-    }
-    get isSlideClick(){
+    get isSlideClick():boolean{
         return this._isSlideClick;
     }
-    get isSlideMove(){
+    get isSlideMove():boolean{
         return this._isSlideMove;
     }
-    get activeSlide(){
+    get activeSlide():number{
+        return this._currentSlide;
+    }
+    get currentActiveSlide(){
         return this._currentSlide==this._copyFirstSlide?this.DEFAULT_CURRENTSLIDE:this._currentSlide==this._copyLastSlide?this._defaultLastSlide:this._currentSlide;
     }
-    get slideLocation(){
+    get slideLocation():number{
         return this._slideLocation;
     }
-    get moveLoc(){
+    get moveLoc():number{
         return this._moveLoc;
+    }
+    get copyFirstSlide():number{
+        return this._copyFirstSlide;
+    }
+    get copyLastSlide():number{
+        return this._copyLastSlide;
+    }
+    get defaultCurrentSlide():number{
+        return this._defaultCurrentSlide;
+    }
+    get defaultLastSlide():number{
+        return this._defaultLastSlide;
+    }
+    get slideLength():number{
+        return this._slideLength;
     }
     set slideLocation(slideLocation:number){
         this._slideLocation=slideLocation;
