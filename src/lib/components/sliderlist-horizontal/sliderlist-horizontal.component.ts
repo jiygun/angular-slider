@@ -7,7 +7,7 @@ import { SliderChangeService } from "../../services/slider-change.service";
   selector: 'sliderlist-horizontal',
   templateUrl: './sliderlist-horizontal.component.html',
   styleUrls: ['./sliderlist-horizontal.component.scss'],
-  host:{"(mousedown)": "onMouseDown($event)","(window:mousemove)":"onMouseMove($event)","(window:mouseup)":"onMouseUp($event)",
+  host:{"(mousedown)": "onMouseDown($event)","(touchstart)": "onMouseDown($event)","(window:mousemove)":"onMouseMove($event)","(window:mouseup)":"onMouseUp($event)",
   "(window:resize)":"onResize()","(window:touchmove)":"onMouseMove($event)",
   "(window:touchend)":"onMouseUp($event)"}
 })
