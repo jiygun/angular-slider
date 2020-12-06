@@ -11,7 +11,7 @@ import { SliderChangeService } from "../../services/slider-change.service";
   "(window:resize)":"onResize()","(window:touchmove)":"onMouseMove($event)",
   "(window:touchend)":"onMouseUp($event)"}
 })
-export class SliderListHorizontalComponent implements OnInit,OnDestroy,AfterViewChecked {
+export class SliderListHorizontalComponent implements OnDestroy,AfterViewChecked {
 
 
   private _slider:HorizontalSlider;
@@ -46,8 +46,6 @@ export class SliderListHorizontalComponent implements OnInit,OnDestroy,AfterView
     this._sliderTimer.unsubscribe();
     this._sliderChangerSubscription.unsubscribe();
   }
-  ngOnInit(): void {
-  }
   private createSliderTimer(){
     this._sliderTimer=timer(this.delayTime||4000,this.delayTime||4000).subscribe(t=>{
       if(this._slider){
@@ -59,7 +57,7 @@ export class SliderListHorizontalComponent implements OnInit,OnDestroy,AfterView
   onMouseDown($event){
     $event.preventDefault();
     if(this._slider) this._slider.down($event,this._sliderHtmlElement,this._sliderListHtmlElement);
-    this._sliderTimer.unsubscribe();
+    if(this._sliderTimer) this._sliderTimer.unsubscribe();
   }
   onMouseMove($event){
     $event.stopPropagation();

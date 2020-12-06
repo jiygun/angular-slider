@@ -7,7 +7,8 @@ export class HorizontalSlider extends Slider{
         slideBox?slideBox.style.transform=`translate3d(${this.slideLocation}px, 0px, 0px)`:null;
     }
     down($event:any,slideContainer:HTMLElement,slideBox:HTMLElement){
-        super.slideDown($event.clientX||$event.touches[0].clientX,parseFloat(getComputedStyle(slideContainer).width.slice(0,getComputedStyle(slideContainer).width.length-2)));
+        const containerSize=parseFloat(getComputedStyle(slideContainer).width.slice(0,getComputedStyle(slideContainer).width.length-2));
+        super.slideDown($event.clientX||$event.touches[0].clientX,containerSize);
         slideBox.style.transitionDuration="0ms"
         slideBox.style.transform=`translate3d(${this.slideLocation}px,0px, 0px)`;
     }

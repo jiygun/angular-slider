@@ -64,7 +64,7 @@ export class Slider{
         this._slideLocation=this._slideLocation>0?this._slideLocation=0:this._slideLocation;
     }
     calculateSlideLocation(){
-        let tempCurrent=this._currentSlide;
+        const tempCurrent=this._currentSlide;
         this._currentSlide=Math.abs(this._slideLocation/this._slideContainerSize);
         this._previousSlide=tempCurrent==this._currentSlide?this._tempPreviousSlide:tempCurrent;
         this._tempPreviousSlide=this._previousSlide;

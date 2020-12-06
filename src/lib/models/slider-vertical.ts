@@ -7,7 +7,8 @@ export class VerticalSlider extends Slider{
         slideBox?slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`:null;
     }
     down($event:any,slideContainer:HTMLElement,slideBox:HTMLElement){
-        super.slideDown($event.clientY||$event.touches[0].clientY,parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2)));
+        const containerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
+        super.slideDown($event.clientY||$event.touches[0].clientY,containerSize);
         slideBox.style.transitionDuration="0ms"
         slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
     }

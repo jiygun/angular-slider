@@ -58,7 +58,7 @@ export class SliderListVerticalComponent implements OnInit,OnDestroy,AfterViewCh
   onMouseDown($event){
     $event.preventDefault();
     if(this._slider) this._slider.down($event,this._sliderHtmlElement,this._sliderListHtmlElement);
-    this._sliderTimer.unsubscribe();
+    if(this._sliderTimer) this._sliderTimer.unsubscribe();
   }
   onMouseMove($event){
     $event.stopPropagation();
