@@ -4,59 +4,50 @@ export class VerticalSlider extends Slider{
 
     constructor(currentSlide:number,previousSlide:number,defaultCurrentSlide:number,defaultLastSlide:number,copyFirstSlide:number,copyLastSlide:number,slideLength:number,slideHeight:number,slideBox:HTMLElement){
         super(currentSlide,previousSlide,defaultCurrentSlide,defaultLastSlide,copyFirstSlide,copyLastSlide,slideLength,slideHeight);
-        slideBox?slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`:null;
+        if (slideBox) slideBox.style.transform = `translate3d(0px, ${this.slideLocation}px, 0px)`;
     }
-    down($event:any,slideContainer:HTMLElement,slideBox:HTMLElement){
-        super.slideDown($event.clientY||$event.touches[0].clientY,parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2)));
-        slideBox.style.transitionDuration="0ms"
+    down(e: Event, slideContainer: HTMLElement, slideBox: HTMLElement) {
+      this.setSlideContainerSize(slideContainer);
+      super.slideDown(((e || window.event) as MouseEvent).clientY || ((e || window.event) as TouchEvent).touches[0].clientY || ((e || window.event) as TouchEvent).changedTouches[0].clientY, this.slideContainerSize);
+      slideBox.style.transitionDuration = "0ms";
+      slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
+    }
+    move(e: Event, slideBox: HTMLElement) {
+      super.slideMove(((e || window.event) as MouseEvent).clientY || ((e || window.event) as TouchEvent).touches[0].clientY || ((e || window.event) as TouchEvent).changedTouches[0].clientY);
+      if (this.isSlideClick && this.isSlideMove) slideBox.style.transform = `translate3d(0px,${-this.moveLoc+this.slideLocation}px, 0px)`;
+    }
+    up(e: Event, slideBox: HTMLElement) {
+      if (this.isSlideClick && this.isSlideMove) {
+        super.calculateSlideLocation();
+        slideBox.style.transition = "transform 400ms ease-out 0s";
+        slideBox.style.transform=`translate3d(0px,${this.slideLocation}px, 0px)`;
+      }
+      super.slideUp();
+    }
+    resize(slideContainer: HTMLElement, slideBox: HTMLElement) {
+      this.setSlideContainerSize(slideContainer);
+      slideBox.style.transition = "transform 0s ease 0s";
+      slideBox.style.transform = `translate3d(0px,${-this.slideContainerSize * this.activeSlide}px , 0px)`;
+      this.slideLocation = -this.slideContainerSize * this.activeSlide;
+    }
+    setSlideLocationForBannerAndTimer(slideIndex: number, slideContainer: HTMLElement, slideBox: HTMLElement) {
+      if (this.activeSlide === this.copyFirstSlide) {
+        this.activeSlide = this.defaultCurrentSlide;
+        this.setSlideContainerSize(slideContainer);
+        slideBox.style.transition = "transform 0ms ease-out 0s";
         slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
-    }
-    move($event:any,slideBox:HTMLElement){
-        super.slideMove($event.clientY||($event.touches?$event.touches[0].clientY:0));
-        this.isSlideClick&&this.isSlideMove?slideBox.style.transform=`translate3d(0px,${-this.moveLoc+this.slideLocation}px, 0px)`:null;
-    }
-    up($event:any,slideBox:HTMLElement){
-        if(this.isSlideClick&&this.isSlideMove){
-            super.calculateSlideLocationSize();
-            super.calculateSlideLocation();
-            slideBox.style.transition="transform 400ms ease-out 0s";
-            slideBox.style.transform=`translate3d(0px,${this.slideLocation}px, 0px)`;
-        }
-        super.slideUp();
-    }
-    resize(slideContainer:HTMLElement,slideBox:HTMLElement){
-        slideBox.style.transition="transform 0s ease 0s";
-        slideBox.style.transform=`translate3d(0px, ${-parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2))*this.activeSlide}px, 0px)`;
-        this.slideLocation=-parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2))*this.activeSlide;
-    }
-    setSlideLocation(slideIndex:number,slideContainer:HTMLElement,slideBox:HTMLElement){
-        if(slideIndex===0&&this.activeSlide===this.copyFirstSlide){
-            this.activeSlide=this.defaultCurrentSlide;
-            this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
-            slideBox.style.transition="transform 0ms ease-out 0s";
-            slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
-        }else if(slideIndex+1===this.defaultLastSlide&&this.activeSlide===this.copyLastSlide){
-            this.activeSlide=this.defaultLastSlide;
-            this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
-            slideBox.style.transition="transform 0ms ease-out 0s";
-            slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
-        }else{
-            this.activeSlide=(slideIndex+1);
-            this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
-            slideBox.style.transition="transform 400ms ease-out 0s";
-            slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
-        }
-    }
-    changeActiveSlideWithCopySlideCheck(slideContainer:HTMLElement,slideBox:HTMLElement){
-        if(this.activeSlide==this.copyFirstSlide){
-            slideBox.style.transitionDuration="0ms";
-            this.activeSlide=this.defaultCurrentSlide;
-            this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
-            slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
-        }
-        this.activeSlide=this.activeSlide+1;
-        this.slideContainerSize=parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
-        slideBox.style.transition="transform 400ms ease-out 0s";
+      } else if (this.activeSlide === this.copyLastSlide) {
+        this.activeSlide = this.defaultLastSlide;
+        this.setSlideContainerSize(slideContainer);
+        slideBox.style.transition = "transform 0ms ease-out 0s";
         slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
+      }
+      this.activeSlide = slideIndex || this.activeSlide + 1;
+      this.setSlideContainerSize(slideContainer);
+      slideBox.style.transition = "transform 400ms ease-out 0s";
+      slideBox.style.transform=`translate3d(0px, ${this.slideLocation}px, 0px)`;
+    }
+    private setSlideContainerSize(slideContainer: HTMLElement): void {
+      this.slideContainerSize = parseFloat(getComputedStyle(slideContainer).height.slice(0,getComputedStyle(slideContainer).height.length-2));
     }
 }

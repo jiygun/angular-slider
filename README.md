@@ -44,6 +44,7 @@ In Component
 
 <slider-angular>
     <slider>
+        <!--Optional : <sliderlist-vertical>-->
         <sliderlist-horizontal [delayTime]="Default:4000" (activeSlide)="activeSlide($event)" (clickedSlide)="clickedSlide($event)">
             <slider-item>
                 <slider-image [image]="Copy Last Slide"></slider-image>

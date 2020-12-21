@@ -38,7 +38,7 @@ import { SliderImageComponent } from './components/slider-image/slider-image.com
     SliderAngularComponent,
     SliderItemComponent,
     SliderListHorizontalComponent,
-    //SliderListVerticalComponent,
+    SliderListVerticalComponent,
     SliderLinkComponent,
     SliderImageComponent
   ]

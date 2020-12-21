@@ -9,8 +9,8 @@ export class SliderChangeService {
   private _activeSlideItemSource:BehaviorSubject<number>;
   private _activeSlide:Observable<number>;
 
-  constructor() { 
-    this._activeSlideItemSource=new BehaviorSubject(0);
+  constructor() {
+    this._activeSlideItemSource=new BehaviorSubject(1);
     this._activeSlide=this._activeSlideItemSource.asObservable();
   }
 
