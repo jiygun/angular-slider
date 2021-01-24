@@ -1,9 +1,10 @@
 import { Slider } from './slider';
 
 export class HorizontalSlider extends Slider {
-
-  constructor(currentSlide: number, previousSlide: number, defaultCurrentSlide: number, defaultLastSlide: number, copyFirstSlide: number, copyLastSlide: number, slideLength: number, slideWidth: number, slideBox: HTMLElement) {
+  scrollDelay:number;
+  constructor(currentSlide: number, previousSlide: number, defaultCurrentSlide: number, defaultLastSlide: number, copyFirstSlide: number, copyLastSlide: number, slideLength: number, slideWidth: number, slideBox: HTMLElement,scrollDelay:number) {
     super(currentSlide, previousSlide, defaultCurrentSlide, defaultLastSlide, copyFirstSlide, copyLastSlide, slideLength, slideWidth);
+    this.scrollDelay=scrollDelay;
     if (slideBox) slideBox.style.transform = `translate3d(${this.slideLocation}px, 0px, 0px)`;
   }
   down(e: Event, slideContainer: HTMLElement, slideBox: HTMLElement) {
@@ -19,7 +20,7 @@ export class HorizontalSlider extends Slider {
   up(e: Event, slideBox: HTMLElement) {
     if (this.isSlideClick && this.isSlideMove) {
       super.calculateSlideLocation();
-      slideBox.style.transition = "transform 400ms ease-out 0s";
+      slideBox.style.transition = `transform ${this.scrollDelay}ms ease-out 0s`;
       slideBox.style.transform = `translate3d(${this.slideLocation}px,0px, 0px)`;
     }
     super.slideUp();
@@ -44,7 +45,7 @@ export class HorizontalSlider extends Slider {
     }
     this.activeSlide = slideIndex || this.activeSlide + 1;
     this.setSlideContainerSize(slideContainer);
-    slideBox.style.transition = "transform 400ms ease-out 0s";
+    slideBox.style.transition = `transform ${this.scrollDelay}ms ease-out 0s`;
     slideBox.style.transform = `translate3d(${this.slideLocation}px,0px, 0px)`;
   }
   private setSlideContainerSize(slideContainer: HTMLElement): void {

@@ -1,6 +1,11 @@
-img{
-    -o-object-fit: fill;
-    object-fit: fill;
+:host{
+    display: block;
     width: 100%;
     height: 100%;
+    img{
+        -o-object-fit: fill;
+        object-fit: fill;
+        width: 100%;
+        height: 100%;
+    }
 }

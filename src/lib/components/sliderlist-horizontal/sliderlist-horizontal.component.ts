@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { HorizontalSlider } from "../../models/slider-horizontal";
 import { SliderChangeService } from "../../services/slider-change.service";
@@ -12,7 +12,7 @@ import { SliderChangeService } from "../../services/slider-change.service";
     "(window:resize)": "onResize()", "(window:touchmove)": "onMouseMove($event)", "(window:touchend)": "onMouseUp($event)"
   }
 })
-export class SliderListHorizontalComponent implements OnDestroy, AfterViewChecked {
+export class SliderListHorizontalComponent implements OnInit,OnDestroy,OnChanges {
 
   private _slider: HorizontalSlider;
 
@@ -25,28 +25,36 @@ export class SliderListHorizontalComponent implements OnDestroy, AfterViewChecke
   private _sliderChangeSubscription: Subscription;
 
   @Input() delayTime: number;
+  @Input() scrollDelay: number;
 
   @Output() activeSlide: EventEmitter<number>;
   @Output() clickedSlide: EventEmitter<number>;
+
+  private slideListChanges!:MutationObserver;
 
   constructor(private elementRef: ElementRef, private sliderChangeService: SliderChangeService) {
     this.activeSlide = new EventEmitter();
     this.clickedSlide = new EventEmitter();
   }
-  ngAfterViewChecked(): void {
-    if ([...this.elementRef.nativeElement.children].length > 0 && !this._sliderItemList) {
-      setTimeout(() => {
-        this._sliderHtmlElement = this.elementRef.nativeElement.parentNode;
-        this._sliderListHtmlElement = this.elementRef.nativeElement;
-        this._sliderItemList = [...this.elementRef.nativeElement.children];
-        this._slider = new HorizontalSlider(1, 0, 1, this._sliderItemList.length - 2, this._sliderItemList.length - 1, 0, this._sliderItemList.length, parseFloat(getComputedStyle(this._sliderHtmlElement).width.slice(0, getComputedStyle(this._sliderHtmlElement).width.length - 2)), this._sliderListHtmlElement);
-        this.changeActiveSlide();
-      }, 500);
-    }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.scrollDelay&&this._slider) this._slider.scrollDelay=this.scrollDelay;
+  }
+  ngOnInit(): void {
+    this.slideListChanges = new MutationObserver((mutations: MutationRecord[]) => {
+      this._sliderHtmlElement = this.elementRef.nativeElement.parentNode;
+      this._sliderListHtmlElement = this.elementRef.nativeElement;
+      this._sliderItemList = [...this.elementRef.nativeElement.children];
+      this._slider = new HorizontalSlider(1, 0, 1, this._sliderItemList.length - 2, this._sliderItemList.length - 1, 0, this._sliderItemList.length, parseFloat(getComputedStyle(this._sliderHtmlElement).width.slice(0, getComputedStyle(this._sliderHtmlElement).width.length - 2)), this._sliderListHtmlElement,this.scrollDelay||400);
+      this.changeActiveSlide();
+    });
+    this.slideListChanges.observe(this.elementRef.nativeElement, {
+      childList: true,
+    });
   }
   ngOnDestroy(): void {
     if(this._sliderTimer) this._sliderTimer.unsubscribe();
     if(this._sliderChangeSubscription) this._sliderChangeSubscription.unsubscribe();
+    if(this.slideListChanges) this.slideListChanges.disconnect();
   }
   private createSliderTimer() {
     this._sliderTimer = timer(this.delayTime || 4000, this.delayTime || 4000).subscribe(t => {
