@@ -1,30 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { BannerComponent } from './components/banner/banner.component';
-import { BannerListComponent } from './components/banner-list/banner-list.component';
+import { Injector, NgModule, ReflectiveInjector } from '@angular/core';
 import { BannerItemComponent } from './components/banner-item/banner-item.component';
-import { BannerImageComponent } from './components/banner-image/banner-image.component';
-import { SliderComponent } from './components/slider/slider.component';
+import { BannerListComponent } from './components/banner-list/banner-list.component';
+import { BannerComponent } from './components/banner/banner.component';
+import { SlideNextComponent } from './components/slide-next/slide-next.component';
+import { SlidePrevComponent } from './components/slide-prev/slide-prev.component';
 import { SliderAngularComponent } from './components/slider-angular/slider-angular.component';
 import { SliderItemComponent } from './components/slider-item/slider-item.component';
+import { SliderComponent } from './components/slider/slider.component';
 import { SliderListHorizontalComponent } from './components/sliderlist-horizontal/sliderlist-horizontal.component';
-import { SliderListVerticalComponent } from './components/sliderlist-vertical/sliderlist-vertical.component';
-import { SliderLinkComponent } from './components/slider-link/slider-link.component';
-import { SliderImageComponent } from './components/slider-image/slider-image.component';
+import { SlideChangeService } from './services/slide-change.service';
 
 @NgModule({
   declarations: [
     BannerComponent,
     BannerListComponent,
     BannerItemComponent,
-    BannerImageComponent,
     SliderComponent,
     SliderAngularComponent,
     SliderItemComponent,
     SliderListHorizontalComponent,
-    SliderListVerticalComponent,
-    SliderLinkComponent,
-    SliderImageComponent
+    SlidePrevComponent,
+    SlideNextComponent,
   ],
   imports: [
     CommonModule
@@ -33,14 +30,16 @@ import { SliderImageComponent } from './components/slider-image/slider-image.com
     BannerComponent,
     BannerListComponent,
     BannerItemComponent,
-    BannerImageComponent,
     SliderComponent,
     SliderAngularComponent,
     SliderItemComponent,
     SliderListHorizontalComponent,
-    SliderListVerticalComponent,
-    SliderLinkComponent,
-    SliderImageComponent
+    SlidePrevComponent,
+    SlideNextComponent,
   ]
 })
-export class SliderAngularModule { }
+export class SliderAngularModule { 
+  constructor(private injector: Injector) {
+    //SlideChangeService.injector = injector;
+  }
+}
