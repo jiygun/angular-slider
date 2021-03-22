@@ -1,6 +1,6 @@
 {
   "name": "slider-angular",
-  "version": "2.0.7",
+  "version": "2.0.9",
   "peerDependencies": {
     "@angular/common": "^10.0.6",
     "@angular/core": "^10.0.6"
@@ -16,5 +16,6 @@
     "angular",
     "slider"
   ],
-  "author": "Jiyan Güngen"
+  "author": "Jiyan Güngen",
+  "license": "MIT"
 }

@@ -1,44 +1,78 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { SlideOptions } from '../../models/slide-options';
-import { SlideBuilder } from "../../models/slide.builder";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { SlideOptions } from '../../models/slide.options';
+import { SlideEventService } from '../../services/events/event.service';
+import { OptionsListener } from '../../services/change-listeners/options.listener.service';
+import { SlideBuilderService } from '../../services/builders/slide.builder.service';
+import { WidthBuilder } from '../../services/builders/width.builder.service';
+import { ChangeBuilder } from '../../services/builders/change.builder.service';
 
 @Component({
   selector: 'sliderlist-horizontal',
   templateUrl: './sliderlist-horizontal.component.html',
   styleUrls: ['./sliderlist-horizontal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SlideBuilderService, SlideEventService, WidthBuilder, ChangeBuilder]
 })
-export class SliderListHorizontalComponent implements OnInit,OnDestroy,AfterViewInit{
+export class SliderListHorizontalComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @Input() slideOptions!:SlideOptions;
+  @Input() slideOptions!: SlideOptions;
 
-  private slideListChanges!:MutationObserver
+  private slideListChanges!: MutationObserver
 
-  private isSlideCreatedFirstTime:boolean=false;
+  private isSlideCreatedFirstTime: boolean = false;
 
-  private slideBuilder!:SlideBuilder;
+  constructor(private slideEventService: SlideEventService, private optionsListener: OptionsListener, private elementRef: ElementRef) { }
 
-  constructor(private elementRef: ElementRef,private renderer:Renderer2) {
-
-  }
   ngOnDestroy(): void {
     this.slideListChanges.disconnect();
   }
+
   ngOnInit(): void {
-    this.slideListChanges=new MutationObserver((mutations: MutationRecord[]) => {
-      if(!this.isSlideCreatedFirstTime) {
-        if(this.slideOptions&&!this.slideBuilder) new SlideBuilder(this.elementRef,this.slideOptions,this.renderer);
-        this.isSlideCreatedFirstTime=true;
+    this.slideListChanges = new MutationObserver((mutations: MutationRecord[]) => {
+      if (!this.isSlideCreatedFirstTime) {
+        this.optionsListener.setSlideOptions(this.slideOptions);
+        this.isSlideCreatedFirstTime = true;
       };
     });
     this.slideListChanges.observe(this.elementRef.nativeElement, {
-      childList:true
+      childList: true
     });
   }
-  ngAfterViewInit(): void {
-    if(this.slideOptions&&!this.slideBuilder && [...this.elementRef.nativeElement.children].length>0) new SlideBuilder(this.elementRef,this.slideOptions,this.renderer);
-      
-  }
+
   ngOnChanges(): void {
-    if(this.slideOptions&&this.isSlideCreatedFirstTime&&!this.slideBuilder) new SlideBuilder(this.elementRef,this.slideOptions,this.renderer);
+    if (this.slideOptions && !this.isSlideCreatedFirstTime && this.elementRef.nativeElement.children.length) {
+      this.optionsListener.setSlideOptions(this.slideOptions);
+      this.isSlideCreatedFirstTime = true;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.slideOptions && !this.isSlideCreatedFirstTime && this.elementRef.nativeElement.children.length) {
+      this.optionsListener.setSlideOptions(this.slideOptions);
+      this.isSlideCreatedFirstTime = true;
+    }
+  }
+
+  @HostListener('touchstart', ['$event'])
+  @HostListener('mousedown', ['$event'])
+  private onClick(event: Event): void {
+    this.slideEventService.slideDown(event);
+  }
+
+  @HostListener('window:touchmove', ['$event'])
+  @HostListener('window:mousemove', ['$event'])
+  private onMove(event: Event) {
+    this.slideEventService.slideMove(event);
+  }
+
+  @HostListener('window:touchend', ['$event'])
+  @HostListener('window:mouseup', ['$event'])
+  private onUp(event: Event) {
+    this.slideEventService.slideUp(event);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  private onResize(event: Event) {
+    this.slideEventService.slideResize(event);
   }
 }

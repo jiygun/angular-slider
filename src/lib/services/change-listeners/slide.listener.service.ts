@@ -1,6 +1,6 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SlideChangeTypes } from '../models/slide.builder';
+import { SlideChangeTypes } from '../../models/slide.model';
 
 export interface SlideChangeModel{
   index:number;
@@ -10,16 +10,15 @@ export interface SlideChangeModel{
 @Injectable({
   providedIn: 'root'
 })
+export class SlideListener {
 
-export class SlideChangeService {
+  //public static instance: SlideChangeService=null;
 
-  public static instance: SlideChangeService=null;
-  
   private _slideChangeSource:BehaviorSubject<SlideChangeModel>;
   private _slideChangeModel:Observable<SlideChangeModel>;
 
   constructor() {
-    SlideChangeService.instance = this;
+    //SlideChangeService.instance = this;
     this._slideChangeSource=new BehaviorSubject(null);
     this._slideChangeModel=this._slideChangeSource.asObservable();
   }

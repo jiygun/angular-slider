@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Injector, NgModule, ReflectiveInjector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BannerItemComponent } from './components/banner-item/banner-item.component';
 import { BannerListComponent } from './components/banner-list/banner-list.component';
 import { BannerComponent } from './components/banner/banner.component';
@@ -9,7 +9,8 @@ import { SliderAngularComponent } from './components/slider-angular/slider-angul
 import { SliderItemComponent } from './components/slider-item/slider-item.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { SliderListHorizontalComponent } from './components/sliderlist-horizontal/sliderlist-horizontal.component';
-import { SlideChangeService } from './services/slide-change.service';
+import { NgBannerDirective } from './components/banner-list/ng-banner.directive';
+import { BannerActiveDirective } from './components/banner/banner-active.directive';
 
 @NgModule({
   declarations: [
@@ -22,24 +23,28 @@ import { SlideChangeService } from './services/slide-change.service';
     SliderListHorizontalComponent,
     SlidePrevComponent,
     SlideNextComponent,
+    NgBannerDirective,
+    BannerActiveDirective,
   ],
   imports: [
     CommonModule
   ],
   exports: [
     BannerComponent,
-    BannerListComponent,
-    BannerItemComponent,
     SliderComponent,
     SliderAngularComponent,
     SliderItemComponent,
     SliderListHorizontalComponent,
     SlidePrevComponent,
     SlideNextComponent,
-  ]
+  ],
 })
-export class SliderAngularModule { 
-  constructor(private injector: Injector) {
-    //SlideChangeService.injector = injector;
-  }
-}
+export class SliderAngularModule { }
+/*
+  providers: [
+    {
+      provide: 'slideOptions', deps: [SlideOptionsChangeService],
+      useFactory: (slideOptionsService: SlideOptionsChangeService) => slideOptionsService.getSlideOptions()
+    }
+  ]
+*/

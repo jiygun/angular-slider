@@ -1,19 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { SlideChangeService } from '../../services/slide-change.service';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { SlideListener } from '../../services/change-listeners/slide.listener.service';
 
 @Component({
   selector: 'slide-next',
   templateUrl: './slide-next.component.html',
   styleUrls: ['./slide-next.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideNextComponent implements OnInit {
+export class SlideNextComponent {
 
-  constructor(private slideChangeService:SlideChangeService) { }
+  constructor(private slideListener: SlideListener) { }
 
-  ngOnInit(): void {
-  }
-  @HostListener("click",["$event"])
-  setActiveSlide(){
-    this.slideChangeService.setSlideChangeModel({index:1,slideChangeType:"nav"});
+  @HostListener("click", ["$event"])
+  setActiveSlide() {
+    this.slideListener.setSlideChangeModel({ index: 1, slideChangeType: "Nav" });
   }
 }

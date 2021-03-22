@@ -4,8 +4,9 @@ export interface SlideResponsiveModel {
 }
 
 export interface SlideOptions {
-    loop?: boolean;
-    items?: number;
+    loop: boolean;
+    items: number;
+    banner? :boolean;
     margin?: number;
     duration?: number;
     timer?: number;

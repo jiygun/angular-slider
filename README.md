@@ -23,7 +23,7 @@
 
   
 
-npm install slider-angular --save
+npm install slider-angular
 
   
 
@@ -69,6 +69,15 @@ SliderAngularModule
 
 In Component
 
+
+
+```hs
+
+Note:
+
+* The nav design has been deleted. It is fixed to absolute left and right only. Create your own design.
+* You can use the "active" class in the banner section. There is no design for active class.
+
 slideResponsiveModel:SlideResponsiveModel[]=[
 	{breakPoint:max,items:max},
 	.
@@ -79,17 +88,29 @@ slideResponsiveModel:SlideResponsiveModel[]=[
 
 slideOptions:SlideOptions={
 	loop: boolean;
-	items: number; -> The value here should be the same as the maksimum number of the items in the 	responsive model.
+	items: number; -> The value here should be the same as the maximum number of the items in the 	responsive model.
 	margin: number;
-	duration: number;
+	duration: number; 400-600 recommended
 	timer: number; -> İf loop was false this wouldn't  work.
 	responsive: slideResponsiveModel; 
+  banner: boolean;
 }
 
-*If the number of slides shown was greater than 1, the banner part wouldn't work.
+example;
 
-```hs
-
+slideOptions={
+  loop:true,
+  items:4,
+  margin:20,
+  duration:600,
+  timer:3000,
+  banner:true,
+  responsive:[
+    {breakPoint:1200,items:4},
+    {breakPoint:900,items:3},
+    {breakPoint:0,items:2}
+  ]
+};
   
 
 <slider-angular>
@@ -113,26 +134,7 @@ slideOptions:SlideOptions={
 
 //Optional
 
-<banner>
-
-<banner-list>
-.
-.
-<banner-item>
-.
-.
-.
-</banner-item>
-<banner-item>
-.
-.
-.
-</banner-item>
-.
-.
-</banner-list>
-
-</banner>
+<banner></banner>
 
 </slider-angular>
 
